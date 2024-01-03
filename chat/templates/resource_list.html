@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+
+<div class="container-fluid pt-3">
+  <div class="row removable">
+      <div class="col-lg-12 px-sm-0">
+          <div class="card shadow-none px-0 bg-transparent mt-0 mb-4">
+              <div class="card-body px-0 pb-0">
+                  <div class="px-0 pb-4">
+                      <div class="row flex-row">
+                          <div class="col-lg-3 mb-4">
+                              <div class="card max-height-vh-70 h-100 overflow-auto overflow-x-hidden mb-5 mb-lg-0" style="max-height: 70vh;">
+                                  <form class="card-header">
+                                      <div class="input-group mb-0">
+                                          <input type="text" placeholder="Search" class="form-control" aria-label="Amount (to the nearest dollar)">
+                                          <div class="input-group-append">
+                                              <span class="input-group-text">
+                                                  <i class="fa fa-search"></i>
+                                              </span>
+                                          </div>
+                                      </div>
+                                  </form>
+                                  <div class="card-body p-2">
+                                    <h4 class="mb-0 mt-1">Chat history</h4><br>
+                                    {% if latest_messages %}
+                                    {% for message in latest_messages %}
+                                      <a href="javascript:;" class="d-block p-2 rounded-lg bg-gradient-primary">
+                                          <div class="d-flex p-2">
+                                              <div class="ml-2">
+                                                  <div class="justify-content-between align-items-center"> 
+                                                      <p class="text-white mb-0 text-xs font-weight-normal">{{ message.max_timestamp }}</p>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </a><br>
+                                      {% endfor %}
+                                      {% else %}
+                                      <p>No latest messages available.</p>
+                                      {% endif %}
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="col-lg-8 custom-widened-column">
+                              <div class="card max-height-vh-70" style="max-height: 80vh;">
+                                  <div class="card-header shadow-xl">
+                                      <div class="row">
+                                          <div class="col-md-10">
+                                              <div class="d-flex align-items-center">
+                                                  <div class="ms-3">
+                                                      <h3 class="mb-0 d-block">Resource List</h3>
+                                                     
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="card-body overflow-auto overflow-x-hidden" style="height: 100%;" id="chatContainer">           
+                                    <div class="row mt-4">
+                                    </div>
+                                    {% if resources %}
+                                    <div class="row justify-content-start mb-4" >
+                                        {% for resource in resources %}
+                                            <div class="col-auto">
+                                                <div class="card" >
+                                                    <div class="card-body p-2" style="width: 100%;">
+                                                        <p class="mb-1" >
+                                                            <strong><h4>{{ resource.title }}</h4></strong>
+                                                            <p>{{ resource.description }}</p>
+                                                    
+                                                            {% if resource.attached_file %}
+                                                                <a href="{{ resource.attached_file.url }}" target="_blank">Download File</a>
+                                                            {% endif %}
+                                                    
+                                                            {% if resource.url_link %}
+                                                                <p><a href="{{ resource.url_link }}" target="_blank">Visit URL</a></p>
+                                                            {% endif %}
+                                                        </p>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <p>No resources available.</p>
+                                {% endif %}
+                                
+
+                                    <div class="row justify-content-start">
+                                        <div class="col-auto">
+                                            <div class="card ">
+                                               
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                               
+                              </div>
+
+                          </div>
+                         
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+{% endblock %}

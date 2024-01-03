@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+
+<div class="container clearfix">
+  <div class="people-list" id="people-list">
+    <div class="search">
+      <input type="text" placeholder="search" />
+      <i class="fa fa-search"></i>
+    </div>
+    
+  </div>
+  
+  <div class="chat">
+    <div class="chat-header clearfix">
+      <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_01_green.jpg" alt="avatar" />
+      
+      <div class="chat-about">
+        <div class="chat-with">Chat with Health Advisor</div>
+        <div class="chat-num-messages"></div>
+      </div>
+      <i class="fa fa-star"></i>
+    </div> <!-- end chat-header -->
+    
+    <div class="chat-history">
+      <ul>
+        
+        
+        <li>
+          <div class="message-data">
+            <span class="message-data-name"><i class="fa fa-circle online"></i> Advisor</span>
+            <span class="message-data-time">10:31 AM, Today</span>
+          </div>
+          <i class="fa fa-circle online"></i>
+          <i class="fa fa-circle online" style="color: #AED2A6"></i>
+          <i class="fa fa-circle online" style="color:#DAE9DA"></i>
+        </li>
+        
+      </ul>
+      
+    </div> <!-- end chat-history -->
+    
+    <div class="chat-message clearfix">
+      <textarea name="message-to-send" id="message-to-send" placeholder ="Type your message" rows="3"></textarea>
+      <textarea type="text" name="message" id="message" required></textarea>
+      <i class="fa fa-file-o"></i> &nbsp;&nbsp;&nbsp;
+      <i class="fa fa-file-image-o"></i>
+      
+      <button>Send</button>
+
+    </div> <!-- end chat-message -->
+    
+  </div> <!-- end chat -->
+  
+</div> <!-- end container -->
+
+<script id="message-template" type="text/x-handlebars-template">
+<li class="clearfix">
+  <div class="message-data align-right">
+    <span class="message-data-time" >{{time}}, Today</span> &nbsp; &nbsp;
+    <span class="message-data-name" >Advisor</span> <i class="fa fa-circle me"></i>
+  </div>
+  <div class="message other-message float-right">
+    Why did the web developer leave the restaurant? Because of the table layout.
+  </div>
+</li>
+</script>
+
+<script id="message-response-template" type="text/x-handlebars-template">
+<li>
+  <div class="message-data">
+    <span class="message-data-name"><i class="fa fa-circle online"></i>User</span>
+    <span class="message-data-time">{{time}}, Today</span>
+  </div>
+  <div class="message my-message">
+    Why did the web developer leave the restaurant? Because of the table layout.
+  </div>
+</li>
+</script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.0/handlebars.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/list.js/1.1.1/list.min.js'></script>
+<script  src="{% static 'css/script.js' %}"></script>
+
+<script>
+  // Get references to the two textareas
+  const messageToSendTextarea = document.getElementById('message-to-send');
+  const messageTextarea = document.getElementById('message');
+
+  // Add an event listener to the 'input' event of the 'message-to-send' textarea
+  messageToSendTextarea.addEventListener('input', function () {
+      // Set the value of the 'message' textarea to be the same as 'message-to-send'
+      messageTextarea.value = messageToSendTextarea.value;
+  });
+</script>
+{% endblock %}

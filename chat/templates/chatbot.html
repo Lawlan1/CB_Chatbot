@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+
+<div class="container-fluid pt-3">
+  <div class="row removable">
+      <div class="col-lg-12 px-sm-0">
+          <div class="card shadow-none px-0 bg-transparent mt-0 mb-4">
+              <div class="card-body px-0 pb-0">
+                  <div class="px-0 pb-4">
+                      <div class="row flex-row">
+                          <div class="col-lg-3 mb-4">
+                              <div class="card max-height-vh-70 h-100 overflow-auto overflow-x-hidden mb-5 mb-lg-0" style="max-height: 70vh;">
+                                  
+                                  <div class="card-body p-2">
+                                    <h4 class="mb-0 mt-1">Chat history</h4><br>
+                                    {% if latest_messages %}
+                                    {% for message in latest_messages %}
+                                      <a href="{% url 'history' %}?date={{ message.max_timestamp }}&session={{ message.session}}" class="d-block p-2 rounded-lg bg-gradient-primary">
+                                          <div class="d-flex p-2">
+                                              <div class="ml-2">
+                                                  <div class="justify-content-between align-items-center"> 
+                                                      <p class="text-white mb-0 text-xs font-weight-normal">{{ message.max_timestamp }}</p>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </a><br>
+                                      {% endfor %}
+                                      {% else %}
+                                      <p>No latest messages available.</p>
+                                      {% endif %}
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="col-lg-8 custom-widened-column">
+                              <div class="card max-height-vh-70" style="max-height: 80vh;">
+                                  <div class="card-header shadow-xl">
+                                      <div class="row">
+                                          <div class="col-md-10">
+                                              <div class="d-flex align-items-center">
+                                                  <div class="ms-3">
+                                                      <h3 class="mb-0 d-block">Chat with Mental Health Advisor</h3>
+                                                     
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="card-body overflow-auto overflow-x-hidden" style="height: 100%;" id="chatContainer">           
+                                    <div class="row mt-4">
+                                        <div class="col-md-12 text-center">
+                                            <span id="timestamp" class="badge text-dark"></span>
+
+                                                    <script>
+                                                        // Get the current date and time
+                                                        const now = new Date();
+
+                                                        // Format the date and time as desired
+                                                        const formattedTimestamp = new Intl.DateTimeFormat('en-US', {
+                                                            weekday: 'short',
+                                                            hour: 'numeric',
+                                                            minute: 'numeric',
+                                                        }).format(now);
+
+                                                        // Set the formatted timestamp to the element with the id "timestamp"
+                                                        document.getElementById('timestamp').innerText = formattedTimestamp;
+                                                    </script>
+
+                                        </div>
+                                    </div>
+                                    {% if chat_history %}
+                                      {% for message in chat_history %}
+                                          {% if message.sender == 'user' %}
+                                              <div class="row justify-content-end text-right mb-4">
+                                                  <div class="col-auto">
+                                                      <div class="card bg-gradient-primary text-white">
+                                                          <div class="card-body p-2">
+                                                              <p class="mb-1">
+                                                                  {{ message.message }}
+                                                              </p>
+                                                              <div class="d-flex align-items-center justify-content-end text-sm opacity-6">
+                                                                  <i class="fa fa-check-double mr-1 text-xs" aria-hidden="true"></i>
+                                                                  <small>
+                                                                      {% if message.timestamp.date == now.date %}
+                                                                          {{ message.timestamp|date:"h:i A" }}
+                                                                      {% else %}
+                                                                      {{ message.timestamp|date:"F j, Y, h:i A" }}
+                                                                      {% endif %}
+                                                                  </small>
+                                                              </div>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          {% elif message.sender == 'bot' %}
+                                              <div class="row justify-content-start mb-4">
+                                                  <div class="col-auto">
+                                                      <div class="card ">
+                                                          <div class="card-body p-2">
+                                                              <p class="mb-1">
+                                                                  {{ message.message }} 
+                                                              </p>
+                                                              <div class="d-flex align-items-center text-sm opacity-6">
+                                                                  <i class="far fa-clock mr-1" aria-hidden="true"></i>
+                                                                  <small>
+                                                                      {% if message.timestamp.date == now.date %}
+                                                                          {{ message.timestamp|date:"h:i A" }}
+                                                                      {% else %}
+                                                                          {{ message.timestamp|date:"F j, Y, h:i A" }}
+                                                                      {% endif %}
+                                                                  </small>
+                                                              </div>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          {% endif %}
+                                      {% endfor %}
+                                  {% else %}
+                                      <p>No chat history available.</p>
+                                  {% endif %}
+
+
+                                    <div class="row justify-content-start">
+                                        <div class="col-auto">
+                                            <div class="card ">
+                                               
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer d-block" id="scrollToBottom" >
+                                  <form method="post" action="{% url 'chatbot' %}" id="chatForm">
+                                    {% csrf_token %}
+                                    <div class="input-group mb-3">
+                                        <input type="text" placeholder="Search" class="form-control" name="message" id="message">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">
+                                                <i id="sendButton" class="fa fa-paper-plane"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                    <script>
+                                        // Add this script at the end or after the chat history is loaded
+                                        document.addEventListener("DOMContentLoaded", function () {
+                                            var chatContainer = document.getElementById('chatContainer');
+                                            chatContainer.scrollTop = chatContainer.scrollHeight;
+                                        });
+
+                                        // Function to simulate delay using async/await
+                                        function delay(ms) {
+                                            return new Promise(resolve => setTimeout(resolve, ms));
+                                        }
+
+                                        // Sample function to handle sending messages and updating the chat dynamically
+                                        document.getElementById('sendButton').addEventListener('click', async function () {
+                                            // ... your existing script for handling chat interactions ...
+                                        });
+                                    </script>
+
+
+                                </div>
+
+                              </div>
+
+                          </div>
+                         
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+{% endblock %}
