@@ -11,13 +11,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-*x_6@bohce)k$1nfupg@w)-o=#tqlgcs0xmg8v#1+1*+z1r2yo'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+WEBSITE_HOSTNAME = os.environ.get('WEBSITE_HOSTNAME', None)
 
-ALLOWED_HOSTS = []
+DEBUG = WEBSITE_HOSTNAME == None
+
+if DEBUG:
+    ALLOWED_HOSTS = []
+else:
+    ALLOWED_HOSTS = [WEBSITE_HOSTNAME]
+    CSRF_TRUSTED_ORIGINS = [f'https://{WEBSITE_HOSTNAME}']
 
 
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
