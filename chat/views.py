@@ -40,7 +40,7 @@ def chatbot(request):
         form = ChatbotForm(request.POST)
         if form.is_valid():
             user_message = form.cleaned_data['message']
-            api_url = 'https://childbullyingsupport.azurewebsites.net/simple_chatbot/'
+            api_url = 'http://childbullyingsupport.azurewebsites.net/simple_chatbot/'
             headers = {'Content-Type': 'application/json'}
             data = {'message': user_message}
 
