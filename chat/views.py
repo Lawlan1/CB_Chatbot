@@ -8,6 +8,8 @@ from .forms import ChatbotForm
 from .models import ChatMessage, Resource
 from django.contrib.sessions.models import Session
 from django.db.models import Max, F, Count
+from .forms import UserFeedbackForm
+from django.contrib import messages
 
 def home(request):
     return render(request, 'index.html')
@@ -73,3 +75,20 @@ def chatbot(request):
 def resource_list(request):
     resources = Resource.objects.all()
     return render(request, 'resource_list.html', {'resources': resources})
+
+@login_required
+def user_feedback(request):
+    if request.method == 'POST':
+        form = UserFeedbackForm(request.POST)
+        if form.is_valid():
+            feedback = form.save(commit=False)
+            feedback.user = request.user if request.user.is_authenticated else None
+            feedback.save()
+            messages.success(request, f'Feedback submitted successfully')
+            previous_page = '/feedback/'
+            return redirect(previous_page)
+    else:
+        form = UserFeedbackForm()
+
+    return render(request, 'feedback_form.html', {'form': form})
+
