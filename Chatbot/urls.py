@@ -7,6 +7,7 @@ from django.conf import settings
 from simple_chatbot.views import SimpleChatbot
 from user_app.views import user_login
 from chat import views
+from chat.views import user_feedback
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -17,4 +18,5 @@ urlpatterns = [
     path('', chatbot, name='chatbot'),
     path('history/', views.history, name='history'),
     path('resources/', views.resource_list, name='resource_list'),
+    path('feedback/', user_feedback, name='user_feedback'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
