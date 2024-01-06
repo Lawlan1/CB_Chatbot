@@ -60,6 +60,12 @@
                         </li>
                         {%if user.is_authenticated%} 
                         <li class="nav-item">
+                            <a class="nav-link" href="{% url 'user_feedback' %}">
+                                <i class="fa fa-globe text-info"></i>
+                                <span class="nav-link-text">Feedback</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{% url 'logout' %}">
                                 <i class="fa fa-lock text-danger"></i>
                                 <span class="nav-link-text">Logout</span>
@@ -124,6 +130,18 @@
                 </div>
             </div>
         </nav>
+
+        {% if messages %}
+      
+        {% for message in messages %}
+  
+        <div class="alert alert-{{message.tags}}" style="text-align: center;">{{ message }}</div>
+  
+  
+        {% endfor %}
+  
+        {% endif %}
+
         {% block content %}{% endblock %}
         <!-- Footer -->
         <footer class="footer pt-0 px-4">
